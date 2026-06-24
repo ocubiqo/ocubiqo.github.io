@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messi vs Ronaldo • WC2026 • The GOAT Debate</title>
+  <meta name="description" content="Messi breaks ALL-TIME WC record with 18 goals on his 39th birthday. Ronaldo becomes first to score at 6 World Cups aged 41. The stats settle the debate.">
+  <meta property="og:title" content="🐐 Messi vs Ronaldo: WC2026 — GOAT Debate Has Numbers Now">
+  <meta property="og:description" content="🎂 Messi turns 39 today with 18 WC goals (ALL-TIME RECORD). Ronaldo scores at his 6th World Cup aged 41. Compare them on 2 Sides App.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/ocubiqo/2sides-data/main/assets/promo-02-top-players.jpg">
+  <meta property="og:url" content="https://ocubiqo.github.io/messi-vs-ronaldo.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="2 Sides App">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🐐 Messi vs Ronaldo: WC2026 GOAT Debate">
+  <meta name="twitter:description" content="🎂 Messi 39 today, 18 WC goals ALL-TIME RECORD. Ronaldo 41, scores at 6th WC. Who wins? Compare on 2 Sides.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/ocubiqo/2sides-data/main/assets/promo-02-top-players.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --m-blue: #74ACDF;
+      --m-gold: #F6B40E;
+      --m-dark: #003087;
+      --r-red: #CC0000;
+      --r-green: #006600;
+      --r-dark: #7a0000;
+      --bg: #06060b;
+      --gold: #FFD700;
+      --white: #ffffff;
+      --dim: rgba(255,255,255,0.6);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      background: linear-gradient(90deg, var(--r-red), #6b0000, #001a5e, var(--m-dark), #001a5e, #6b0000, var(--r-red));
+      background-size: 400% 100%;
+      animation: gradShift 8s ease infinite;
+      padding: 9px 0;
+      overflow: hidden;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    }
+    @keyframes gradShift {
+      0%,100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .ticker {
+      display: flex;
+      white-space: nowrap;
+      animation: scroll 40s linear infinite;
+    }
+    .ticker-item {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0 48px;
+      color: #fff;
+    }
+    .ticker-item .sep { color: var(--gold); margin: 0 8px; }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── CANVAS ── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 70% at 15% 50%, rgba(0,48,135,0.35) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 70% at 85% 50%, rgba(204,0,0,0.3) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 50% 80%, rgba(255,215,0,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 7px 18px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 32px;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #ff3b30;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+
+    .hero-main {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(64px, 14vw, 160px);
+      line-height: 0.88;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+    }
+    .name-messi {
+      display: block;
+      color: var(--m-blue);
+      text-shadow:
+        0 0 40px rgba(116,172,223,0.7),
+        0 0 80px rgba(116,172,223,0.3);
+    }
+    .vs-text {
+      display: block;
+      font-size: 0.38em;
+      color: var(--gold);
+      letter-spacing: 12px;
+      text-shadow: 0 0 40px rgba(255,215,0,0.9);
+      animation: goldPulse 2.5s ease-in-out infinite;
+      margin: 4px 0;
+    }
+    @keyframes goldPulse {
+      0%,100% { text-shadow: 0 0 40px rgba(255,215,0,0.9); }
+      50% { text-shadow: 0 0 80px rgba(255,215,0,1), 0 0 140px rgba(255,215,0,0.4); }
+    }
+    .name-ronaldo {
+      display: block;
+      color: var(--r-red);
+      text-shadow:
+        0 0 40px rgba(204,0,0,0.7),
+        0 0 80px rgba(204,0,0,0.3);
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 21px);
+      color: var(--dim);
+      max-width: 640px;
+      line-height: 1.65;
+      margin-bottom: 56px;
+    }
+    .hero-sub strong { color: var(--gold); font-weight: 800; }
+
+    /* ── PLAYER SPLIT ── */
+    .player-split {
+      display: grid;
+      grid-template-columns: 1fr 72px 1fr;
+      gap: 0;
+      width: 100%;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+    .p-card {
+      border-radius: 16px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .p-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .p-card.m {
+      background: linear-gradient(140deg, rgba(0,30,100,0.85) 0%, rgba(116,172,223,0.12) 100%);
+      border: 1px solid rgba(116,172,223,0.3);
+      text-align: left;
+    }
+    .p-card.m::before { background: linear-gradient(90deg, var(--m-dark), var(--m-blue)); }
+    .p-card.r {
+      background: linear-gradient(140deg, rgba(100,0,0,0.85) 0%, rgba(204,0,0,0.12) 100%);
+      border: 1px solid rgba(204,0,0,0.3);
+      text-align: right;
+    }
+    .p-card.r::before { background: linear-gradient(90deg, var(--r-red), var(--r-dark)); }
+
+    .p-flag { font-size: 44px; display: block; margin-bottom: 6px; }
+    .p-name {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(24px, 4vw, 42px);
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+    .m .p-name { color: var(--m-blue); }
+    .r .p-name { color: var(--r-red); }
+    .p-meta {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--dim);
+      margin-bottom: 18px;
+    }
+    .p-stat {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .p-stat-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--dim);
+      margin-bottom: 6px;
+    }
+    .p-stat-num {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: 40px;
+      line-height: 1;
+    }
+    .m .p-stat-num { color: var(--m-blue); }
+    .r .p-stat-num { color: var(--r-red); }
+    .p-stat-note {
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 4px;
+      color: var(--gold);
+    }
+
+    .vs-col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vs-orb {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--gold) 0%, #b8860b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: 20px;
+      color: #000;
+      font-weight: 900;
+      box-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.2);
+    }
+
+    /* ── BIRTHDAY BANNER ── */
+    .bday {
+      position: relative;
+      z-index: 1;
+      max-width: 840px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+    .bday-inner {
+      background: linear-gradient(135deg, rgba(246,180,14,0.12) 0%, rgba(246,180,14,0.04) 100%);
+      border: 1px solid rgba(246,180,14,0.5);
+      border-radius: 20px;
+      padding: 32px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bday-inner::before {
+      content: '🎂';
+      position: absolute;
+      font-size: 120px;
+      opacity: 0.04;
+      top: -20px; right: -10px;
+      pointer-events: none;
+    }
+    .bday-emoji { font-size: 36px; display: block; margin-bottom: 12px; }
+    .bday-title {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(26px, 5vw, 44px);
+      color: var(--gold);
+      margin-bottom: 10px;
+      line-height: 1.1;
+    }
+    .bday-text { color: var(--dim); font-size: 15px; line-height: 1.7; max-width: 560px; margin: 0 auto; }
+    .bday-text strong { color: var(--white); }
+
+    /* ── SECTION WRAPPER ── */
+    .section {
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 72px 24px;
+    }
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(36px, 7vw, 72px);
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 48px;
+    }
+    .gold-line {
+      width: 56px; height: 3px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin: 0 auto 48px;
+    }
+
+    /* ── RECORD CARDS ── */
+    .records-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .rec-card {
+      border-radius: 16px;
+      padding: 28px 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+    }
+    .rec-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .rec-card:hover { transform: translateY(-6px); }
+    .rec-card.m-card { border-color: rgba(116,172,223,0.3); }
+    .rec-card.m-card::before { background: linear-gradient(90deg, var(--m-dark), var(--m-blue)); }
+    .rec-card.m-card:hover { box-shadow: 0 24px 60px rgba(116,172,223,0.15); }
+    .rec-card.r-card { border-color: rgba(204,0,0,0.3); }
+    .rec-card.r-card::before { background: linear-gradient(90deg, var(--r-dark), var(--r-red)); }
+    .rec-card.r-card:hover { box-shadow: 0 24px 60px rgba(204,0,0,0.2); }
+
+    .rec-icon { font-size: 30px; margin-bottom: 12px; display: block; }
+    .rec-who {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .m-card .rec-who { color: var(--m-blue); }
+    .r-card .rec-who { color: var(--r-red); }
+    .rec-head {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(20px, 2.5vw, 26px);
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .rec-body { font-size: 14px; color: var(--dim); line-height: 1.7; }
+    .rec-body em { color: var(--gold); font-style: normal; font-weight: 700; }
+
+    /* ── STATS BARS ── */
+    .stats-box {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 24px;
+      padding: 48px 40px;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 160px 1fr;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .stat-row:last-child { margin-bottom: 0; }
+    .sv-m {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: 30px;
+      color: var(--m-blue);
+      text-align: right;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .sv-r {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: 30px;
+      color: var(--r-red);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .win-tag {
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: var(--gold);
+      color: #000;
+      padding: 3px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .sc { text-align: center; }
+    .sc-name {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--dim);
+      margin-bottom: 10px;
+    }
+    .bar-track {
+      height: 6px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 3px;
+      position: relative;
+      overflow: visible;
+    }
+    .bar-m, .bar-r {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      border-radius: 3px;
+      width: 0;
+      transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .bar-m {
+      right: 50%;
+      background: linear-gradient(270deg, var(--m-blue), var(--m-dark));
+    }
+    .bar-r {
+      left: 50%;
+      background: linear-gradient(90deg, var(--r-red), var(--r-dark));
+    }
+
+    /* ── CTA ── */
+    .cta {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 100px 24px;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,215,0,0.05) 0%, transparent 70%);
+    }
+    .cta-eyebrow {
+      font-size: 11px; font-weight: 900;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+    }
+    .cta-app {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(18px, 3vw, 26px);
+      letter-spacing: 6px;
+      color: var(--gold);
+      text-shadow: 0 0 40px rgba(255,215,0,0.5);
+      margin-bottom: 12px;
+    }
+    .cta-h {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(40px, 9vw, 96px);
+      line-height: 0.95;
+      margin-bottom: 24px;
+    }
+    .cta-p {
+      color: var(--dim);
+      font-size: clamp(15px, 2vw, 19px);
+      max-width: 560px;
+      margin: 0 auto 44px;
+      line-height: 1.7;
+    }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 36px;
+      border-radius: 100px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 900; font-size: 15px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-gold {
+      background: var(--gold);
+      color: #000;
+      box-shadow: 0 8px 32px rgba(255,215,0,0.3);
+    }
+    .btn-gold:hover { box-shadow: 0 14px 48px rgba(255,215,0,0.5); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.5); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 28px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+      line-height: 1.8;
+    }
+    footer a { color: rgba(255,215,0,0.6); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .player-split { grid-template-columns: 1fr; }
+      .vs-col { padding: 16px 0; }
+      .stat-row { grid-template-columns: 1fr 100px 1fr; gap: 6px; }
+      .sv-m, .sv-r { font-size: 22px; }
+      .win-tag { display: none; }
+      .stats-box { padding: 28px 16px; }
+      .bday-inner { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LIVE TICKER -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker">
+    <span class="ticker-item">🎂 TODAY IS MESSI'S 39TH BIRTHDAY <span class="sep">•</span> 18 WC GOALS — ALL-TIME WORLD RECORD</span>
+    <span class="ticker-item">⚡ RONALDO SCORES AT HIS 6TH WORLD CUP — FIRST PLAYER EVER <span class="sep">•</span> AGE 41</span>
+    <span class="ticker-item">🏆 ARGENTINA THROUGH TO THE KNOCKOUTS <span class="sep">•</span> MESSI 5 GOALS IN WC2026</span>
+    <span class="ticker-item">🇵🇹 PORTUGAL 5–0 UZBEKISTAN <span class="sep">•</span> RONALDO BRACE — 10 WC GOALS ALL-TIME</span>
+    <span class="ticker-item">🐐 THE DEBATE WILL NEVER DIE <span class="sep">•</span> BUT THE STATS DON'T LIE</span>
+    <span class="ticker-item">🎂 TODAY IS MESSI'S 39TH BIRTHDAY <span class="sep">•</span> 18 WC GOALS — ALL-TIME WORLD RECORD</span>
+    <span class="ticker-item">⚡ RONALDO SCORES AT HIS 6TH WORLD CUP — FIRST PLAYER EVER <span class="sep">•</span> AGE 41</span>
+    <span class="ticker-item">🏆 ARGENTINA THROUGH TO THE KNOCKOUTS <span class="sep">•</span> MESSI 5 GOALS IN WC2026</span>
+    <span class="ticker-item">🇵🇹 PORTUGAL 5–0 UZBEKISTAN <span class="sep">•</span> RONALDO BRACE — 10 WC GOALS ALL-TIME</span>
+    <span class="ticker-item">🐐 THE DEBATE WILL NEVER DIE <span class="sep">•</span> BUT THE STATS DON'T LIE</span>
+  </div>
+</div>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="live-badge">
+    <span class="live-dot"></span>
+    FIFA World Cup 2026 &nbsp;·&nbsp; Group Stage
+  </div>
+
+  <h1 class="hero-main">
+    <span class="name-messi">MESSI</span>
+    <span class="vs-text">VS</span>
+    <span class="name-ronaldo">RONALDO</span>
+  </h1>
+
+  <p class="hero-sub">
+    Two men. Six World Cups each. One debate the world can't stop having.<br>
+    <strong>But this week, history was written twice.</strong>
+  </p>
+
+  <div class="player-split">
+    <!-- MESSI -->
+    <div class="p-card m">
+      <span class="p-flag">🇦🇷</span>
+      <div class="p-name">LIONEL MESSI</div>
+      <div class="p-meta">🎂 Born June 24, 1987 &nbsp;·&nbsp; 39 Today</div>
+
+      <div class="p-stat">
+        <div class="p-stat-label">WC 2026 Goals</div>
+        <div class="p-stat-num">5</div>
+        <div class="p-stat-note">🏆 Argentina: Knockouts ✓</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">All-Time WC Goals</div>
+        <div class="p-stat-num">18</div>
+        <div class="p-stat-note">👑 ALL-TIME WORLD RECORD (Men + Women)</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Ballon d'Or</div>
+        <div class="p-stat-num">8</div>
+        <div class="p-stat-note">Most in football history</div>
+      </div>
+    </div>
+
+    <!-- VS -->
+    <div class="vs-col">
+      <div class="vs-orb">VS</div>
+    </div>
+
+    <!-- RONALDO -->
+    <div class="p-card r">
+      <span class="p-flag">🇵🇹</span>
+      <div class="p-name">CRISTIANO RONALDO</div>
+      <div class="p-meta">Born Feb 5, 1985 &nbsp;·&nbsp; Age 41</div>
+
+      <div class="p-stat">
+        <div class="p-stat-label">WC 2026 Goals</div>
+        <div class="p-stat-num">2</div>
+        <div class="p-stat-note">🔥 Portugal: Knockouts ✓</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">All-Time WC Goals</div>
+        <div class="p-stat-num">10</div>
+        <div class="p-stat-note">⚡ 1st ever to score at 6 World Cups</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">International Goals</div>
+        <div class="p-stat-num">145</div>
+        <div class="p-stat-note">Men's all-time record by 23</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIRTHDAY CALLOUT -->
+<div class="bday">
+  <div class="bday-inner">
+    <span class="bday-emoji">🎂🐐🎂</span>
+    <div class="bday-title">HAPPY 39TH BIRTHDAY, LEO MESSI</div>
+    <p class="bday-text">
+      Today — June 24, 2026 — Lionel Messi turns 39. He's celebrating with the <strong>all-time World Cup scoring record</strong>: 18 goals across six tournaments, surpassing Miroslav Klose (men's, 16) and Marta (women's, 17). The greatest birthday gift in football history.
+    </p>
+  </div>
+</div>
+
+<!-- RECORD-BREAKING MOMENTS -->
+<div class="section">
+  <div class="section-eyebrow">📰 WC2026 — History Made</div>
+  <h2 class="section-title">HISTORY WRITTEN TWICE</h2>
+  <div class="gold-line"></div>
+
+  <div class="records-grid">
+    <div class="rec-card m-card">
+      <span class="rec-icon">👑</span>
+      <div class="rec-who">Lionel Messi &nbsp;·&nbsp; 🇦🇷 Argentina</div>
+      <div class="rec-head">18 WC GOALS<br>ALL-TIME WORLD RECORD</div>
+      <p class="rec-body">Messi surpassed Klose's men's record (16) and Marta's all-record (17) in the same brace vs Austria (June 22). He now holds <em>the greatest individual scoring record</em> across all FIFA World Cups — men's and women's combined.</p>
+    </div>
+
+    <div class="rec-card r-card">
+      <span class="rec-icon">⚡</span>
+      <div class="rec-who">Cristiano Ronaldo &nbsp;·&nbsp; 🇵🇹 Portugal</div>
+      <div class="rec-head">FIRST TO SCORE AT 6 DIFFERENT WORLD CUPS</div>
+      <p class="rec-body">No player in history has ever scored at six World Cups — until June 23, 2026. Ronaldo's brace vs Uzbekistan (Portugal won 5-0) made him the <em>first and only</em>: 2006 · 2010 · 2014 · 2018 · 2022 · 2026.</p>
+    </div>
+
+    <div class="rec-card r-card">
+      <span class="rec-icon">🎖️</span>
+      <div class="rec-who">Cristiano Ronaldo &nbsp;·&nbsp; Age 41</div>
+      <div class="rec-head">2ND OLDEST WC SCORER IN HISTORY</div>
+      <p class="rec-body">At 41 years and 138 days, only Roger Milla (42y 39d, Cameroon 1994) has scored at a World Cup at an older age. Ronaldo scored twice. Critics said he was done — he answered with a <em>brace in a 5-0 win</em>.</p>
+    </div>
+
+    <div class="rec-card m-card">
+      <span class="rec-icon">🔥</span>
+      <div class="rec-who">Lionel Messi &nbsp;·&nbsp; WC2026 Form</div>
+      <div class="rec-head">5 GOALS · ARGENTINA INTO THE KNOCKOUTS</div>
+      <p class="rec-body">Hat-trick vs Algeria (June 16). Brace vs Austria (June 22). Messi is the <em>WC2026 top scorer</em> and Argentina — the defending world champions — are through to the knockout rounds with their captain in devastating form at 39.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CAREER STATS BATTLE -->
+<div class="section" style="padding-top: 0;">
+  <div class="section-eyebrow">📊 Career Statistics</div>
+  <h2 class="section-title">THE NUMBERS DON'T LIE</h2>
+  <div class="gold-line"></div>
+
+  <div class="stats-box" id="statsBox">
+
+    <div class="stat-row">
+      <div class="sv-m"><span class="win-tag">EDGE</span> 914</div>
+      <div class="sc">
+        <div class="sc-name">Career Club Goals</div>
+        <div class="bar-track">
+          <div class="bar-m" data-w="47"></div>
+          <div class="bar-r" data-w="50"></div>
+        </div>
+      </div>
+      <div class="sv-r">973 <span class="win-tag">EDGE</span></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="sv-m"><span class="win-tag">EDGE</span> 414</div>
+      <div class="sc">
+        <div class="sc-name">Career Assists</div>
+        <div class="bar-track">
+          <div class="bar-m" data-w="50"></div>
+          <div class="bar-r" data-w="32"></div>
+        </div>
+      </div>
+      <div class="sv-r">261</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="sv-m">122</div>
+      <div class="sc">
+        <div class="sc-name">International Goals</div>
+        <div class="bar-track">
+          <div class="bar-m" data-w="42"></div>
+          <div class="bar-r" data-w="50"></div>
+        </div>
+      </div>
+      <div class="sv-r">145 <span class="win-tag">EDGE</span></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="sv-m"><span class="win-tag">RECORD</span> 18</div>
+      <div class="sc">
+        <div class="sc-name">World Cup Goals (All-Time)</div>
+        <div class="bar-track">
+          <div class="bar-m" data-w="50"></div>
+          <div class="bar-r" data-w="28"></div>
+        </div>
+      </div>
+      <div class="sv-r">10</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="sv-m"><span class="win-tag">RECORD</span> 8</div>
+      <div class="sc">
+        <div class="sc-name">Ballon d'Or Awards</div>
+        <div class="bar-track">
+          <div class="bar-m" data-w="50"></div>
+          <div class="bar-r" data-w="31"></div>
+        </div>
+      </div>
+      <div class="sv-r">5</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="sv-m">4</div>
+      <div class="sc">
+        <div class="sc-name">Champions League Titles</div>
+        <div class="bar-track">
+          <div class="bar-m" data-w="40"></div>
+          <div class="bar-r" data-w="50"></div>
+        </div>
+      </div>
+      <div class="sv-r">5 <span class="win-tag">EDGE</span></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="sv-m"><span class="win-tag">EDGE</span> 1</div>
+      <div class="sc">
+        <div class="sc-name">World Cup Titles</div>
+        <div class="bar-track">
+          <div class="bar-m" data-w="50"></div>
+          <div class="bar-r" data-w="0"></div>
+        </div>
+      </div>
+      <div class="sv-r">0</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="sv-m"><span class="win-tag">EDGE</span> 47</div>
+      <div class="sc">
+        <div class="sc-name">Career Trophies (Total)</div>
+        <div class="bar-track">
+          <div class="bar-m" data-w="50"></div>
+          <div class="bar-r" data-w="39"></div>
+        </div>
+      </div>
+      <div class="sv-r">37</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <div class="cta-eyebrow">📱 Pick Your Side</div>
+  <div class="cta-app">2 SIDES APP</div>
+  <h2 class="cta-h">WHO WINS<br>YOUR DEBATE?</h2>
+  <p class="cta-p">
+    Compare any two WC2026 nations or players side by side. Stats, history, simulation. Download free and settle it yourself.
+  </p>
+  <div class="cta-btns">
+    <a href="https://play.google.com/store/apps/details?id=com.ocubiqo.twosides" target="_blank" rel="noopener" class="btn btn-gold">
+      ▶ &nbsp;Download on Google Play
+    </a>
+    <a href="https://ocubiqo.github.io/privacy-policy.html" class="btn btn-ghost">
+      Learn More
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>Data accurate as of June 24, 2026 &nbsp;·&nbsp; Sources: <a href="https://www.espn.com" target="_blank">ESPN</a>, <a href="https://www.fifa.com" target="_blank">FIFA</a>, <a href="https://www.foxsports.com" target="_blank">FOX Sports</a>, <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>, <a href="https://www.messivsronaldo.app" target="_blank">messivsronaldo.app</a></p>
+  <p>Made with ⚽ by <a href="https://play.google.com/store/apps/details?id=com.ocubiqo.twosides" target="_blank">2 Sides App</a> &nbsp;·&nbsp; <a href="https://ocubiqo.github.io/privacy-policy.html">Privacy</a></p>
+</footer>
+
+<script>
+// ── PARTICLE BACKGROUND ──
+(function () {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const MESSI_COL   = [116, 172, 223];
+  const RONALDO_COL = [204, 0, 0];
+  const GOLD_COL    = [255, 215, 0];
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  class Particle {
+    constructor(spread) {
+      this.spread = spread;
+      this.init();
+    }
+    init() {
+      this.x  = rand(0, W);
+      this.y  = spread ? rand(0, H) : H + 10;
+      this.r  = rand(0.6, 2.2);
+      this.vx = rand(-0.4, 0.4);
+      this.vy = rand(-1.2, -0.3);
+      this.a  = rand(0.08, 0.45);
+      this.da = rand(0.001, 0.003);
+      const roll = Math.random();
+      this.col = roll < 0.42 ? MESSI_COL : roll < 0.84 ? RONALDO_COL : GOLD_COL;
+    }
+    step() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.a -= this.da;
+      if (this.a <= 0 || this.y < -8) this.init();
+    }
+    draw() {
+      ctx.globalAlpha = Math.max(this.a, 0);
+      ctx.fillStyle = `rgb(${this.col.join(',')})`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 160; i++) particles.push(new Particle(true));
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
+    particles.forEach(p => { p.step(); p.draw(); });
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ── STAT BAR ANIMATION ──
+(function () {
+  const box = document.getElementById('statsBox');
+  let fired = false;
+
+  const io = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !fired) {
+      fired = true;
+      document.querySelectorAll('.bar-m, .bar-r').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%';
+      });
+    }
+  }, { threshold: 0.25 });
+
+  io.observe(box);
+})();
+
+// ── COUNTER ANIMATION for hero numbers ──
+(function () {
+  function animCount(el, target, duration) {
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  // Animate the big numbers in player cards
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.p-stat-num').forEach(el => {
+      const val = parseInt(el.textContent, 10);
+      if (!isNaN(val)) { el.textContent = '0'; animCount(el, val, 1800); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
